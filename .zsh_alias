@@ -19,6 +19,9 @@ alias lS='ls -1FSsh'
 alias lart='ls -1Fcart'
 alias lrt='ls -1Fcrt'
 
+#df aliases
+alias sdf="df -P | awk '0+$5 >= 80 {print}'"
+
 alias grep='grep --color'
 alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 
