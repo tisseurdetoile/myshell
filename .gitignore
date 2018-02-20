@@ -7,3 +7,5 @@
 !*.bashrc
 !.gitignore
 !.zsh_alias
+!.gitconfig
+!README.md
