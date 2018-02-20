@@ -1,0 +1,91 @@
+[include]
+	path = ~/.gitconfig.private
+
+[core]
+	excludesfile = ~/.gitignore_global
+	whitespace = -trailing
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[color]
+	diff = always
+[color "diff"]
+	frag = magenta
+	meta = yellow
+	whitespace = red
+[diff]
+	mnemonicPrefix = true
+	renames = true
+	wordRegex = .
+[fetch]
+	prune = false
+[log]
+	abbrevCommit = true
+	follow = true
+[merge]
+	conflictStyle = diff3
+	log = true
+	ff = false
+[pager]
+	diff = diff-so-fancy | less --tabs=2 -RFX
+	show = diff-so-fancy | less --tabs=2 -RFX
+[pull]
+	rebase = preserve
+[push]
+	default = upstream
+	followTags = true
+[rerere]
+	enabled = true
+	autoupdate = true
+[alias]
+	s = status
+	c = commit
+	rh = reset --hard
+	oops = commit --amend --no-edit
+	b = branch -vv
+	co = checkout	
+	changes = diff --name-status -r	
+	
+	lg = log --graph --abbrev-commit --date=relative -20 --all --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
+	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+	lgf = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+	lg-ascii = log --graph --pretty=format:'%h -%d %s (%cr) <%an>' --abbrev-commit
+	lgs = log --color --graph --pretty=format:'%C(bold white)%h%Creset -%C(bold green)%d%Creset %s %C(bold green)(%cr)%Creset %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	authors = "!git log --pretty=format:%aN | sort | uniq -c | sort -rn"
+	news = log -p HEAD@{1}..HEAD@{0}
+
+	workprofile = "config user.email \"rodolphe.mariotta@maif.fr\";config user.name \"11646N\";"
+	workname = config user.name \"11646N\"
+	workmail = config user.email \"rodolphe.mariotta@maif.fr\"
+	master = checkout
+	alias = "!git config -l | grep alias | cut -c 7-"
+
+	# Le remisage facile
+	st = stash
+	stl = stash list
+	stp = stash pop
+
+	# Le rebase facile
+	irb = rebase --interactive
+	rb = rebase
+	rba = rebase --abort
+	rbc = rebase --continue
+	rbs = rebase --skip
+
+	# tout les commit liés a un fichier
+	filelog = log -u	
+	
+	# Easier merging
+	m = merge -s recursive -X patience
+	mm = merge --no-ff
+	merge-branch = !git checkout master && git merge @{-1}
+	conflicted = grep --name-only --full-name '<<<<<<< HEAD'
+	# Pick our version of a file while merging
+	ours = "!f() { git co --ours $@ && git add $@; }; f"
+	# Pick their version of a file while merging
+	theirs = "!f() { git co --theirs $@ && git add $@; }; f"	
+[commit]
+	template = ~/.stCommitMsg
