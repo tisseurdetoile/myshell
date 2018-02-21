@@ -1,11 +1,11 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MiniVim
 " Details on : https://github.com/sd65/MiniVim
-let MiniVimVersion = 1.1
-let UseCustomKeyBindings = 1
+let g:UseCustomKeyBindings = get(g:, 'UseCustomKeyBindings', "1")
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ General options
-start " Start in Insertion mode
+set nocompatible " We use Vim, not Vi
 syntax enable " Enable syntax highlights
 set ttyfast " Faster refraw
 set mouse=nv " Mouse activated in Normal and Visual Mode
@@ -34,23 +34,41 @@ set number " Show the line number
 set updatetime=1000
 set ignorecase " Search insensitive
 set smartcase " ... but smart
-set showbreak=↪ " See this char when wrapping text
+let &showbreak="\u21aa " " Show a left arrow when wrapping text
 set encoding=utf-8  " The encoding displayed.
 set fileencoding=utf-8  " The encoding written to file.
 set synmaxcol=300 " Don't try to highlight long lines
 set guioptions-=T " Don't show toolbar in Gvim
+set iskeyword+=\- " Complete words containing a dash
 " Open all cmd args in new tabs
-execute ":silent :tab all" 
-
+execute ":silent tab all"
 
 """ Prevent lag when hitting escape
 set ttimeoutlen=0
-set timeoutlen=1000 
+set timeoutlen=1000
 au InsertEnter * set timeout
 au InsertLeave * set notimeout
 
-""" Reopen at last position
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+""" When opening a file : - Reopen at last position - Display info
+function! GetFileInfo()
+  let permissions = getfperm(expand('%:p'))
+  echon  &filetype . ", " . GetFileSize() . ", " . permissions
+endfunction
+function! GetFileSize()
+  let bytes = getfsize(expand('%:p'))
+  if bytes <= 0
+     return ""
+  elseif bytes > 1024*1000*1000
+    return (bytes / 1024*1000*1000) . "GB"
+  elseif bytes > 1024*1000
+    return (bytes / 1024*1000) . "MB"
+  elseif bytes > 1024
+    return (bytes / 1024) . "KB"
+  else
+     return bytes . "B"
+  endif
+endfunction
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif | call GetFileInfo()
 
 """ Custom backup and swap files
 let myVimDir = expand("$HOME/.vim")
@@ -71,10 +89,39 @@ let &directory = mySwapDir
 let &backupdir = myBackupDir
 set writebackup
 
+""" Smart Paste
+let &t_ti .= "\<Esc>[?2004h"
+let &t_te .= "\<Esc>[?2004l"
+function! XTermPasteBegin(ret)
+  set pastetoggle=<f29>
+  set paste
+  return a:ret
+endfunction
+execute "set <f28>=\<Esc>[200~"
+execute "set <f29>=\<Esc>[201~"
+map <expr> <f28> XTermPasteBegin("i")
+imap <expr> <f28> XTermPasteBegin("")
+vmap <expr> <f28> XTermPasteBegin("c")
+cmap <f28> <nop>
+cmap <f29> <nop>
+
+"""  Block Commenter Helper
+autocmd FileType c,cpp,java,go      let b:comment_leader = '\/\/'
+autocmd FileType javascript         let b:comment_leader = '\/\/'
+autocmd FileType arduino            let b:comment_leader = '\/\/'
+autocmd FileType registry           let b:comment_leader = ';'
+autocmd FileType dosbatch           let b:comment_leader = '::'
+autocmd FileType sh,ruby,python     let b:comment_leader = '#'
+autocmd FileType conf,fstab,zsh     let b:comment_leader = '#'
+autocmd FileType make,Cmake,yaml    let b:comment_leader = '#'
+autocmd FileType desktop            let b:comment_leader = '#'
+autocmd FileType matlab,tex         let b:comment_leader = '%'
+autocmd FileType vim                let b:comment_leader = '"'
+autocmd FileType css                let b:comment_leader = '\/\*' | let b:comment_ender = '\*\/'
+autocmd FileType html,xml,markdown  let b:comment_leader = '<!--' | let b:comment_ender = '-->'
 
 """ Key mappings
-
-if UseCustomKeyBindings
+if g:UseCustomKeyBindings
 
 " Helper functions
 function! CreateShortcut(keys, cmd, where, ...)
@@ -86,7 +133,7 @@ function! CreateShortcut(keys, cmd, where, ...)
   endif
   if a:where =~ "n"
     execute "nmap " . keys . " " . a:cmd
-  endif    
+  endif
   if a:where =~ "v"
     let k = (index(a:000,"restoreSelectionAfter") > -1) ? "gv" : ""
     let c = a:cmd
@@ -112,6 +159,49 @@ function! MyQuit()
     endif
   endif
 endfunction
+function! MySave()
+  let cantSave = "echo \"Can't save the file: \" . v:exception | return"
+  let notSaved = "redraw | echo 'This buffer was NOT saved!' | return"
+  try
+    silent w
+  catch /:E45:\|:E505:\|:E212:/
+    if (confirm("This buffer is read only! Wanna save it anyway?", "&Yes\n&No", 2)==1)
+      try
+        silent w!
+      catch /:E212:/
+        if (confirm("Can't open the file, do you want to save it as root?", "&Yes\n&No", 2)==1)
+          try
+            w !sudo tee % > /dev/null
+            edit!
+          catch
+            exe cantSave
+          endtry
+        else
+          exe notSaved
+        endif
+      catch
+        exe cantSave
+      endtry
+    else
+      exe notSaved
+    endif
+  catch /:E32:/
+    if (confirm("This buffer has no file to be saved in! Wanna choose it?", "&Yes\n&No", 2)==1)
+      call feedkeys("\<Esc>:w ")
+    else
+      exe notSaved
+    endif
+  catch
+    exe cantSave
+  endtry
+  let time = strftime("%T")
+  let file = expand('%:p')
+  let permissions = getfperm(file)
+  echom file . " saved at " . time | redraw
+  echohl iGreen | echon "    SAVED     "
+  echohl Green | echon  " " . GetFileSize() . ", " . time . ", " . permissions
+  echohl None
+endfunction
 function! OpenLastBufferInNewTab()
     redir => ls_output
     silent exec 'ls'
@@ -120,10 +210,10 @@ function! OpenLastBufferInNewTab()
     for line in ListBuffers
       let title = split(line, "\"")[1]
       if title !~  "\[No Name"
-        execute "tabnew +" . split(line, " ")[0] . "buf" 
+        execute "tabnew +" . split(line, " ")[0] . "buf"
         break
-      endif       
-    endfor  
+      endif
+    endfor
 endfunction
 function! ToggleColorColumn()
     if &colorcolumn != 0
@@ -143,7 +233,6 @@ function! OpenNetrw()
     Texplore
   endif
 endfunction
-
 function! MenuNetrw()
   let c = input("What to you want to do? (M)ake a dir, Make a (F)ile, (R)ename, (D)elete : ")
   if (c == "m" || c == "M")
@@ -156,9 +245,30 @@ function! MenuNetrw()
     normal D
   endif
 endfunction
+function! ToggleComment()
+  if exists('b:comment_leader')
+    if getline(".") =~ '^' . b:comment_leader
+      " Uncomment the line
+      execute 'silent s/^' . b:comment_leader .'\( \)\?//g'
+      if exists('b:comment_ender')
+        execute 'silent s/ ' . b:comment_ender .'$//g'
+      endif
+    elseif getline(".") =~ '^\s*$'
+      " Empty lines: ignore
+    else
+      " Comment the line
+      execute 'silent s/^/' . b:comment_leader .' /g'
+      if exists('b:comment_ender')
+        execute 'silent s/$/\ ' . b:comment_ender .'/g'
+      endif
+    endif
+  else
+    echom "Unknow comment's symbols for filetype"
+  endif
+endfunction
 
 " Usefull shortcuts to enter insert mode
-nnoremap <Enter> i<Enter>
+nnoremap <CR> i<CR>
 nnoremap <Backspace> i<Backspace>
 nnoremap <Space> i<Space>
 
@@ -166,11 +276,11 @@ nnoremap <Space> i<Space>
 call CreateShortcut("C-a", "0", "inv")
 
 " Ctrl E - End Line
-call CreateShortcut("C-e", "$<right>", "inv")
+call CreateShortcut("C-e", "$l", "inv")
 
 " Ctrl S - Save
-call CreateShortcut("C-s", ":w<enter>", "nv", "cmdInVisual", "restoreSelectionAfter")
-call CreateShortcut("C-s", ":w<enter>i<right>", "i", "noTrailingIInInsert")
+call CreateShortcut("C-s", ":call MySave()<CR>", "nv", "cmdInVisual", "restoreSelectionAfter")
+call CreateShortcut("C-s", ":call MySave()<CR>i<Right>", "i", "noTrailingIInInsert")
 
 " Home - Go To Begin
 call CreateShortcut("Home", "gg", "inv")
@@ -185,13 +295,13 @@ call CreateShortcut("C-k", "d", "v")
 " Ctrl Q - Duplicate Line
 call CreateShortcut("C-q", "mjyyp`jjl", "i")
 call CreateShortcut("C-q", "mjyyp`jj", "n")
-call CreateShortcut("C-q", "yP", "v")
+call CreateShortcut("C-q", "y`]p", "v")
 
 " Ctrl Down - Pagedown
-call CreateShortcut("C-Down", "20j", "inv")
+call CreateShortcut("C-Down", "15j", "inv")
 
 " Ctrl Up - Pageup
-call CreateShortcut("C-Up", "20k", "inv")
+call CreateShortcut("C-Up", "15k", "inv")
 
 " Ctrl Right - Next Word
 call CreateShortcut("C-Right", "w", "nv")
@@ -200,24 +310,33 @@ call CreateShortcut("C-Right", "w", "nv")
 call CreateShortcut("C-Left", "b", "nv")
 
 " Ctrl F - Find
-call CreateShortcut("C-f", ":/", "in", "noTrailingIInInsert")
+call CreateShortcut("C-f", "/", "in", "noTrailingIInInsert")
 
 " Ctrl H - Search and Replace
 call CreateShortcut("C-h", ":%s/", "in", "noTrailingIInInsert")
+
+" Ctrl G - Search and Replace on the line only
+call CreateShortcut("C-g", ":s/", "in", "noTrailingIInInsert")
 
 " Ctrl L - Delete all lines
 call CreateShortcut("C-l", "ggdG", "in")
 
 " Pageup - Move up Line
-call CreateShortcut("PageUp", ":m-2<enter>", "in")
-call CreateShortcut("PageUp", "dkP", "v")
+call CreateShortcut("PageUp", ":m-2<CR>", "inv", "restoreSelectionAfter")
 
 " Pagedown - Move down Line
-call CreateShortcut("PageDown", ":m+<enter>", "in")
-call CreateShortcut("PageDown", "dp", "v")
+call CreateShortcut("PageDown", ":m+<CR>", "in")
+call CreateShortcut("PageDown", ":m'>+<CR>", "v", "restoreSelectionAfter")
+
+" Ctrl Pageup - Move up Line booster
+call CreateShortcut("C-PageUp", ":m-16<CR>", "inv", "restoreSelectionAfter")
+
+" Ctrl Pagedown - Move down Line boosted
+call CreateShortcut("C-PageDown", ":m+15<CR>", "in")
+call CreateShortcut("C-PageDown", ":m'>+15<CR>", "v", "restoreSelectionAfter")
 
 " Ctrl C - Quit
-call CreateShortcut("C-c", ":call MyQuit()<enter>", "inv", "cmdInVisual")
+call CreateShortcut("C-c", ":call MyQuit()<CR>", "inv", "cmdInVisual")
 
 " Tab - Indent
 call CreateShortcut("Tab", ">>", "n")
@@ -238,8 +357,7 @@ call CreateShortcut("C-d", "<del>", "iv", "noLeadingEscInInsert", "noTrailingIIn
 call CreateShortcut("C-d", "x", "n")
 
 " Ctrl T - New tab
-call CreateShortcut("C-t", ":tabnew<enter>i", "inv", "noTrailingIInInsert", "cmdInVisual")
-
+call CreateShortcut("C-t", ":tabnew<CR>i", "inv", "noTrailingIInInsert", "cmdInVisual")
 
 " Alt Right - Next tab
 call CreateShortcut("A-Right", "gt", "inv")
@@ -248,42 +366,46 @@ call CreateShortcut("A-Right", "gt", "inv")
 call CreateShortcut("A-Left", "gT", "inv")
 
 " F2 - Paste toggle
-call CreateShortcut("f2",":call MyPasteToggle()<Enter>", "n")
+call CreateShortcut("f2",":call MyPasteToggle()<CR>", "n")
 
 " F3 - Line numbers toggle
-call CreateShortcut("f3",":set nonumber!<Enter>", "in")
+call CreateShortcut("f3",":set nonumber!<CR>", "in")
 
 " F4 - Panic Button
 call CreateShortcut("f4","mzggg?G`z", "inv")
 
 " F6 - Toggle color column at 80th char
-call CreateShortcut("f6",":call ToggleColorColumn()<Enter>", "inv")
+call CreateShortcut("f6",":call ToggleColorColumn()<CR>", "inv")
 
 " Ctrl O - Netrw (:Explore)
-call CreateShortcut("C-o",":call OpenNetrw()<Enter>", "inv", "noTrailingIInInsert", "cmdInVisual")
+call CreateShortcut("C-o",":call OpenNetrw()<CR>", "inv", "noTrailingIInInsert", "cmdInVisual")
+
+" Ctrl \ - Toggle comments
+call CreateShortcut("C-\\", ":call ToggleComment()<CR>", "inv")
+
 let g:netrw_banner=0 " Hide banner
 let g:netrw_list_hide='\(^\|\s\s\)\zs\.\S\+' " Hide hidden files
-autocmd filetype netrw call KeysInNetrw()
+autocmd FileType netrw call KeysInNetrw()
 function! KeysInNetrw()
   " Right to enter
-  nmap <buffer> <Right> <Enter>
+  nmap <buffer> <Right> <CR>
   " Left to go up
   nmap <buffer> <Left> -
   " l - Display info
   nmap <buffer> l qf
   " n - Menu
-  nmap <buffer> n :call MenuNetrw()<Enter>
+  nmap <buffer> n :call MenuNetrw()<CR>
 endfunction
 
 endif " End custom key bindings
 
 """ Custom commands
 
-" :W - To write with root rights
-command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
-
 " :UndoCloseTab - To undo close tab
-command UndoCloseTab call OpenLastBufferInNewTab()
+command! UndoCloseTab call OpenLastBufferInNewTab()
+
+" :RemoveTrailingSpaces - To remove unwanted space(s) at the end of lines
+command! RemoveTrailingSpaces %s/\s\+$
 
 """ Colors and Statusline
 
@@ -291,11 +413,15 @@ let defaultAccentColor=161
 let colorsAndModes= {
   \ 'i' : 39,
   \ 'v' : 82,
+  \ 'V' : 226,
+  \ '' : 208,
 \}
 let defaultAccentColorGui='#d7005f'
 let colorsAndModesGui= {
   \ 'i' : '#00afff',
   \ 'v' : '#5fff00',
+  \ 'V' : '#ffff00',
+  \ '' : '#ff8700',
 \}
 function! ChangeAccentColor()
   let accentColor=get(g:colorsAndModes, mode(), g:defaultAccentColor)
@@ -319,7 +445,7 @@ let g:currentmode={
     \ 'no' : 'N·Operator Pending',
     \ 'v'  : 'Visual',
     \ 'V'  : 'V·Line',
-    \ '^V' : 'V·Block',
+    \ '' : 'V·Block',
     \ 's'  : 'Select',
     \ 'S'  : 'S·Line',
     \ '^S' : 'S·Block',
@@ -340,9 +466,11 @@ set statusline+=%{ChangeAccentColor()}
 set statusline+=%1*\ ***%{toupper(g:currentmode[mode()])}***\  " Current mode
 set statusline+=%2*\ %<%F\  " Filepath
 set statusline+=%2*\ %= " To the right
+set statusline+=%2*\ (%{&filetype}) " Filetype
 set statusline+=%2*\ %{toupper((&fenc!=''?&fenc:&enc))}\[%{&ff}] " Encoding & Fileformat
-set statusline+=%2*\ %{Modified()}\ %{ReadOnly()} " Flags
-set statusline+=%1*\ \%l/%L-%c\  " Position
+set statusline+=%2*\ %{Modified()} " Modified Flags
+set statusline+=%2*\ %{ReadOnly()} " ReadOnly Flags
+set statusline+=%1*\ \%l/%L(%P)-%c\  " Position
 " Speed up the redraw
 au InsertLeave * call ChangeAccentColor()
 au CursorHold * let &ro = &ro
@@ -357,6 +485,8 @@ set background=dark
 highlight clear
 syntax reset
 set t_Co=256
+hi Green ctermfg=34 ctermbg=NONE cterm=NONE guifg=#00af00 guibg=NONE gui=NONE
+hi iGreen ctermfg=0 ctermbg=34 cterm=NONE guifg=#000000 guibg=#00af00 gui=NONE
 hi Cursor ctermfg=235 ctermbg=231 cterm=NONE guifg=#272822 guibg=#f8f8f0 gui=NONE
 hi Visual ctermfg=NONE ctermbg=59 cterm=NONE guifg=NONE guibg=#49483e gui=NONE
 hi CursorLine ctermfg=NONE ctermbg=237 cterm=NONE guifg=NONE guibg=#3c3d37 gui=NONE
@@ -453,3 +583,5 @@ hi cssValueLength ctermfg=141 ctermbg=NONE cterm=NONE guifg=#ae81ff guibg=NONE g
 hi cssCommonAttr ctermfg=81 ctermbg=NONE cterm=NONE guifg=#66d9ef guibg=NONE gui=NONE
 hi cssBraces ctermfg=NONE ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
 hi TabLineFill cterm=bold ctermbg=0
+" Final redraw
+call ChangeAccentColor()
