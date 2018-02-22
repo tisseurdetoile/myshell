@@ -54,10 +54,6 @@
     hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	authors = "!git log --pretty=format:%aN | sort | uniq -c | sort -rn"
 	news = log -p HEAD@{1}..HEAD@{0}
-
-	workprofile = "config user.email \"rodolphe.mariotta@maif.fr\";config user.name \"11646N\";"
-	workname = config user.name \"11646N\"
-	workmail = config user.email \"rodolphe.mariotta@maif.fr\"
 	master = checkout
 	alias = "!git config -l | grep alias | cut -c 7-"
 
