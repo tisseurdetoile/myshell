@@ -1,10 +1,12 @@
 [include]
 	path = ~/.gitconfig.private
-	path = ~/.gitconfig.os	
+	path = ~/.gitconfig.os
 
 [core]
 	excludesfile = ~/.gitignore_global
 	whitespace = -trailing
+	autocrlf = input
+	editor = vim
 [color]
 	diff = always
 [color "diff"]
@@ -41,12 +43,12 @@
 	rh = reset --hard
 	oops = commit --amend --no-edit
 	b = branch -vv
-	co = checkout	
+	co = checkout
 	changes = diff --name-status -r
-    type = cat-file -t
-    dump = cat-file -p
-	
-	lg = log --graph --abbrev-commit --date=relative -20 --all --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
+	type = cat-file -t
+	dump = cat-file -p
+
+	lg = log --graph --abbrev-commit --date=relative -60 --all --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
 	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
 	lgf = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
 	lg-ascii = log --graph --pretty=format:'%h -%d %s (%cr) <%an>' --abbrev-commit
@@ -70,8 +72,8 @@
 	rbs = rebase --skip
 
 	# tout les commit liés a un fichier
-	filelog = log -u	
-	
+	filelog = log -u
+
 	# Easier merging
 	m = merge -s recursive -X patience
 	mm = merge --no-ff
@@ -80,6 +82,6 @@
 	# Pick our version of a file while merging
 	ours = "!f() { git co --ours $@ && git add $@; }; f"
 	# Pick their version of a file while merging
-	theirs = "!f() { git co --theirs $@ && git add $@; }; f"	
+	theirs = "!f() { git co --theirs $@ && git add $@; }; f"
 [commit]
 	template = ~/.stCommitMsg
