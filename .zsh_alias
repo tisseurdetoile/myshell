@@ -25,11 +25,11 @@ alias sdf="df -P | awk '0+$5 >= 80 {print}'"
 alias grep='grep --color'
 alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 
-alias dud='du -d 1 -h'
-alias duf='du -sh *'
-alias dum='du -hcs ./* | gsort -h' 
-alias fd='find . -type d -name'
-alias ff='find . -type f -name'
+alias dud='/usr/bin/du -d 1 -h'
+alias duf='/usr/bin/du -sh *'
+alias dum='/usr/bin/du -hcs ./* | gsort -h'
+alias fid='find . -type d -name'
+alias fif='find . -type f -name'
 
 alias h='history'
 alias hgrep="fc -El 0 | grep"
@@ -44,4 +44,11 @@ alias ssh-nocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=
 
 export LESS='-R'
 export LESSOPEN='|~/.lessfilter %s'
+
+alias journal='code /Volumes/HOME/blocnotes/Notes/$(date +%F)'
+alias cat='bat'
+alias ping='prettyping --nolegend'
+alias top='sudo htop'
+alias du='ncdu --color dark -rr -x --exclude .git --exclude node_modules'
+alias help='tldr'
 
