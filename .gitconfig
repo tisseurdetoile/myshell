@@ -51,16 +51,29 @@
 	lgf = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
 	lg-ascii = log --graph --pretty=format:'%h -%d %s (%cr) <%an>' --abbrev-commit
 	lgs = log --color --graph --pretty=format:'%C(bold white)%h%Creset -%C(bold green)%d%Creset %s %C(bold green)(%cr)%Creset %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	authors = "!git log --pretty=format:%aN | sort | uniq -c | sort -rn"
 	news = log -p HEAD@{1}..HEAD@{0}
 	master = checkout
 	alias = "!git config -l | grep alias | cut -c 7-"
-
+   # Find branches containing commit
+	fbcc = "!f() { git branch -a --contains $1; }; f"
+	# Find tags containing commit
+	ftcc = "!f() { git describe --always --contains $1; }; f"
 	# Le remisage facile
 	st = stash
 	stl = stash list
 	stp = stash pop
+
+	# Find commits by source code
+	fcbs = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+
+	# Find commits by commit message
+	fcbm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+
+	# Remove branches that have already been merged with master
+	# a.k.a. ‘delete merged’
+	dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
 
 	# Le rebase facile
 	irb = rebase --interactive
@@ -83,3 +96,5 @@
 	theirs = "!f() { git co --theirs $@ && git add $@; }; f"
 [commit]
 	template = ~/.stCommitMsg
+[pull]
+	rebase = true
