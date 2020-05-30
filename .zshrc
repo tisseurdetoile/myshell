@@ -10,8 +10,6 @@ fpath=(
   $fpath
 )
 
-export HOMEBREW_GITHUB_API_TOKEN=6d3983c454ba199d77bc97cd0d4ba7dba9d22b88
-
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
