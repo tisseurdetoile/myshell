@@ -99,9 +99,6 @@ source $ZSH/oh-my-zsh.sh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-# Example aliases
-alias zshconfig="code ~/.zshrc"
-alias ohmyzsh="code ~/.oh-my-zsh"
 source ~/.zsh_alias
 source ~/.zshrc.os
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
