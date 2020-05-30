@@ -1,8 +1,7 @@
 # Example aliases
-alias zshconfig="mate ~/.zshrc"
-alias ohmyzsh="mate ~/.oh-my-zsh"
-alias gitconfig="mate ~/.gitconfig"
-
+alias zshconfig="code ~/.zshrc"
+alias ohmyzsh="code ~/.oh-my-zsh"
+alias gitconfig="code ~/.gitconfig"
 
 alias pgg="ping -c 3 www.google.fr"
 alias showhidden="defaults write com.apple.finder AppleShowAllFiles TRUE;killall Finder"
