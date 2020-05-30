@@ -46,7 +46,6 @@ alias ssh-nocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=
 export LESS='-R'
 export LESSOPEN='|~/.lessfilter %s'
 
-alias journal='code /Volumes/HOME/blocnotes/Notes/$(date +%F)'
 alias cat='bat'
 alias ping='prettyping --nolegend'
 alias top='sudo htop'
