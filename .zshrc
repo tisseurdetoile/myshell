@@ -70,6 +70,7 @@ COMPLETION_WAITING_DOTS="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git vscode sudo docker docker-compose docker-machine osx gpg-agent
+  cp ssh-agent autojump brew mvn vscode
 )
 
 source $ZSH/oh-my-zsh.sh
