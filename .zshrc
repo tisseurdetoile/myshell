@@ -103,7 +103,7 @@ source $ZSH/oh-my-zsh.sh
 alias zshconfig="code ~/.zshrc"
 alias ohmyzsh="code ~/.oh-my-zsh"
 source ~/.zsh_alias
-
+source ~/.zshrc.os
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
