@@ -4,6 +4,8 @@ alias ohmyzsh="code ~/.oh-my-zsh"
 alias gitconfig="code ~/.gitconfig"
 
 alias pgg="ping -c 3 www.google.fr"
+
+# OSX stuff
 alias showhidden="defaults write com.apple.finder AppleShowAllFiles TRUE;killall Finder"
 alias hidehidden="defaults write com.apple.finder AppleShowAllFiles FALSE;killall Finder"
 
