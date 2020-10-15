@@ -1,7 +1,6 @@
 [include]
 	path = ~/.gitconfig.private
 	path = ~/.gitconfig.os
-
 [core]
 	excludesfile = ~/.gitignore_global
 	whitespace = -trailing
@@ -9,10 +8,22 @@
 	editor = vim
 [color]
 	diff = always
+	ui = auto
+[color "status"]
+	untracked = white red
+	unmerged = magenta italic
 [color "diff"]
 	frag = magenta
 	meta = yellow
 	whitespace = red
+[commit]
+	template = ~/.stCommitMsg
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
+[status]
+	showUntrackedFiles = all
 [diff]
 	mnemonicPrefix = true
 	renames = true
@@ -45,6 +56,8 @@
 	changes = diff --name-status -r
 	type = cat-file -t
 	dump = cat-file -p
+  lf = log --follow -p --
+
 
 	lg = log --graph --abbrev-commit --date=relative -60 --all --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
 	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
@@ -56,7 +69,7 @@
 	news = log -p HEAD@{1}..HEAD@{0}
 	master = checkout
 	alias = "!git config -l | grep alias | cut -c 7-"
-   # Find branches containing commit
+  # Find branches containing commit
 	fbcc = "!f() { git branch -a --contains $1; }; f"
 	# Find tags containing commit
 	ftcc = "!f() { git describe --always --contains $1; }; f"
@@ -95,7 +108,4 @@
 	# Pick their version of a file while merging
 	theirs = "!f() { git co --theirs $@ && git add $@; }; f"
 	changelog = "!f() { r=${1:-`git describe --tags --abbrev=0`..HEAD}; echo Changelog for $r; git log --reverse --no-merges --format='* %s' $r; }; f"
-[commit]
-	template = ~/.stCommitMsg
-[pull]
-	rebase = true
+
