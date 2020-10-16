@@ -19,14 +19,15 @@
 [commit]
 	template = ~/.stCommitMsg
 [pull]
-	rebase = true
+	rebase = merges
 [init]
 	defaultBranch = main
 [status]
 	showUntrackedFiles = all
 [diff]
 	mnemonicPrefix = true
-	renames = true
+	renames = copies
+	submodule = log
 	wordRegex = .
 [fetch]
 	prune = false
