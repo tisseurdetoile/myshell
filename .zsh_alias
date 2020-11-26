@@ -43,9 +43,6 @@ alias ...="cd ../.."
 alias c='clear'
 alias ssh-nocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
-export LESS='-R'
-export LESSOPEN='|~/.lessfilter %s'
-
 alias cat='bat'
 alias ping='prettyping --nolegend'
 alias top='sudo htop'

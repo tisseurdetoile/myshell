@@ -112,3 +112,5 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/mc mc
 export PATH="/usr/local/sbin:$PATH"
+export LESS=-iXFR
+export LESSOPEN='|~/.lessfilter %s'

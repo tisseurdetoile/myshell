@@ -6,6 +6,7 @@
 	whitespace = -trailing
 	autocrlf = input
 	editor = vim
+	pager = less -iXFR
 [color]
 	diff = always
 	ui = auto
