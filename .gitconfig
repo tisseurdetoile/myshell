@@ -129,5 +129,5 @@
 	ours = "!f() { git co --ours $@ && git add $@; }; f"
 	# Pick their version of a file while merging
 	theirs = "!f() { git co --theirs $@ && git add $@; }; f"
-	changelog = "!f() { r=${1:-`git describe --tags --abbrev=0`..HEAD}; echo Changelog for $r; git log --reverse --no-merges --format='* %s' $r; }; f"
+	changelog = "!f() { r=${1:-`git describe --tags --abbrev=0`..HEAD}; echo Changelog for $r; git log --reverse --no-merges --format='* %<(60,trunc)%s  (%h)-%<(20,trunc)%an' $r | sort; }; f"
 
