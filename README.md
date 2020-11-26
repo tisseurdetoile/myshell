@@ -8,7 +8,17 @@
 
 ## Install
 
-pick the file you want
+## prerequisite on OSX
+
+- [zsh](https://www.zsh.org/)
+- [Git](https://git-scm.com/)
+- [homebrew](https://brew.sh/index_fr)
+- [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh/wiki)
+- [Bat](https://github.com/sharkdp/bat) `brew install bat`
+- [prettyping](http://denilson.sa.nom.br/prettyping/) `brew install prettyping`
+- [htop](http://hisham.hm/htop/) `brew install htop`
+- [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy) `brew install diff-so-fancy`
+- [ncdu](https://dev.yorhel.nl/ncdu) `brew install ncdu`
 
 ## Author
 
