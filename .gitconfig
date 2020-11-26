@@ -5,7 +5,7 @@
 	excludesfile = ~/.gitignore_global
 	whitespace = -trailing-space
 	autocrlf = input
-	editor = vim
+	editor = code --wait
 	pager = less -iXFR
 [color]
 	diff = always
