@@ -30,6 +30,12 @@
 	renames = copies
 	submodule = log
 	wordRegex = .
+[difftool "p4mergetool"]
+  cmd = /Applications/p4merge.app/Contents/MacOS/p4merge "$LOCAL" "$REMOTE"
+  keepBackup = false
+  keepTemporaries = false
+  trustExitCode = false
+  prompt = false
 [fetch]
 	prune = false
 [log]
@@ -39,6 +45,12 @@
 	conflictStyle = diff3
 	log = true
 	ff = false
+[mergetool "p4mergetool"]
+    cmd = /Applications/p4merge.app/Contents/MacOS/p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    keepBackup = false
+    keepTemporaries = false
+    trustExitCode = false
+    prompt = false
 [pager]
 	diff = diff-so-fancy | less --tabs=2 -RFX
 	show = diff-so-fancy | less --tabs=2 -RFX
