@@ -36,6 +36,8 @@
   keepTemporaries = false
   trustExitCode = false
   prompt = false
+[difftool "meld"]
+    cmd = meld "$LOCAL" "$REMOTE"
 [fetch]
 	prune = false
 [log]
@@ -51,6 +53,8 @@
     keepTemporaries = false
     trustExitCode = false
     prompt = false
+[mergetool "meld"]
+    cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
 [pager]
 	diff = diff-so-fancy | less --tabs=2 -RFX
 	show = diff-so-fancy | less --tabs=2 -RFX
