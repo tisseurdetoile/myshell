@@ -3,7 +3,7 @@
 	path = ~/.gitconfig.os
 [core]
 	excludesfile = ~/.gitignore_global
-	whitespace = -trailing
+	whitespace = -trailing-space
 	autocrlf = input
 	editor = vim
 	pager = less -iXFR
