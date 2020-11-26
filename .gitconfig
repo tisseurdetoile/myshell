@@ -38,6 +38,8 @@
   prompt = false
 [difftool "meld"]
     cmd = meld "$LOCAL" "$REMOTE"
+[difftool "vscode"]
+    cmd = code --wait --diff "$LOCAL" "$REMOTE"
 [fetch]
 	prune = false
 [log]
@@ -55,6 +57,8 @@
     prompt = false
 [mergetool "meld"]
     cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+[mergetool "vscode"]
+    cmd = code --wait "$MERGED"
 [pager]
 	diff = diff-so-fancy | less --tabs=2 -RFX
 	show = diff-so-fancy | less --tabs=2 -RFX
