@@ -47,3 +47,6 @@ alias make_readme='npx readme-md-generator'
 ## OSX stuff
 alias showhidden="defaults write com.apple.finder AppleShowAllFiles TRUE;killall Finder"
 alias hidehidden="defaults write com.apple.finder AppleShowAllFiles FALSE;killall Finder"
+
+alias j11="export JAVA_HOME=`/usr/libexec/java_home -v 11.0.9`; java -version"
+alias j15="export JAVA_HOME=`/usr/libexec/java_home -v 15.0.1`; java -version"
