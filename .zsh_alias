@@ -50,3 +50,6 @@ alias hidehidden="defaults write com.apple.finder AppleShowAllFiles FALSE;killal
 
 alias j11="export JAVA_HOME=`/usr/libexec/java_home -v 11.0.9`; java -version"
 alias j15="export JAVA_HOME=`/usr/libexec/java_home -v 15.0.1`; java -version"
+
+#youtube-dl
+alias youtubemp3='/usr/local/bin/youtube-dl --no-overwrites --ignore-errors --continue --extract-audio --audio-format mp3'
