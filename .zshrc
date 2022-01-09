@@ -69,8 +69,9 @@ COMPLETION_WAITING_DOTS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git vscode sudo docker docker-compose docker-machine osx gpg-agent
-  cp ssh-agent autojump brew mvn vscode common-aliases
+  git vscode sudo docker docker-compose docker-machine macos gpg-agent
+  cp ssh-agent autojump brew mvn vscode common-aliases yarn history
+  github
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -111,6 +112,14 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/mc mc
-export PATH="/usr/local/sbin:$PATH"
+export PATH="/usr/local/opt/node@14/bin:/usr/local/sbin:$PATH"
 export LESS=-iXFR
 export LESSOPEN='|~/.lessfilter %s'
+export JAVA_HOME=`/usr/libexec/java_home -v 11.0.9`
+
+  # Set Spaceship ZSH as a prompt
+  autoload -U promptinit; promptinit
+  prompt spaceship
+
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/tisseurdetoile/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
