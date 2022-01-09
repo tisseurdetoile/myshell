@@ -47,3 +47,6 @@ alias make_readme='npx readme-md-generator'
 ## OSX stuff
 alias showhidden="defaults write com.apple.finder AppleShowAllFiles TRUE;killall Finder"
 alias hidehidden="defaults write com.apple.finder AppleShowAllFiles FALSE;killall Finder"
+
+#youtube-dl
+alias youtubemp3='/usr/local/bin/youtube-dl --no-overwrites --ignore-errors --continue --extract-audio --audio-format mp3'
