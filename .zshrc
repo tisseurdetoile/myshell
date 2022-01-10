@@ -121,6 +121,3 @@ export JAVA_HOME=`/usr/libexec/java_home -v 11.0.9`
   # Set Spaceship ZSH as a prompt
   autoload -U promptinit; promptinit
   prompt spaceship
-
-# heroku autocomplete setup
-HEROKU_AC_ZSH_SETUP_PATH=/Users/tisseurdetoile/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
