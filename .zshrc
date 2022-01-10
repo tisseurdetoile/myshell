@@ -101,8 +101,9 @@ source $ZSH/oh-my-zsh.sh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-source ~/.zsh_alias
-source ~/.zshrc.os
+[ -f ~/.zsh_alias ] && source ~/.zsh_alias
+[ -f ~/.zshrc.os ] && source ~/.zshrc.os
+[ -f ~/.zshrc.private ] && source ~/.zshrc.private
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
