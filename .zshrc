@@ -71,7 +71,7 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(
   git vscode sudo docker docker-compose docker-machine macos gpg-agent
   cp ssh-agent autojump brew mvn vscode common-aliases yarn history
-  github
+  github emoji-clock sudo web-search
 )
 
 source $ZSH/oh-my-zsh.sh
