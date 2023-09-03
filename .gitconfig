@@ -66,6 +66,7 @@
 [push]
 	default = upstream
 	followTags = true
+	autoSetupRemote = true
 [rerere]
 	enabled = true
 	autoupdate = true
