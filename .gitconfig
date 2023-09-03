@@ -133,3 +133,8 @@
 	theirs = "!f() { git co --theirs $@ && git add $@; }; f"
 	changelog = "!f() { r=${1:-`git describe --tags --abbrev=0`..HEAD}; echo Changelog for $r; git log --reverse --no-merges --format='* %<(60,trunc)%s  (%h)-%<(20,trunc)%an' $r | sort; }; f"
 
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
