@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/tisseurdetoile/.oh-my-zsh"
+export ZSH="/Users/mariottarodolphe/.oh-my-zsh"
 
 fpath=(
   /usr/local/share/zsh-completions
@@ -14,7 +14,8 @@ fpath=(
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="spaceship"
+#ZSH_THEME=$RANDOM_THEME
+# see below
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -106,8 +107,18 @@ source $ZSH/oh-my-zsh.sh
 [ -f ~/.zshrc.private ] && source ~/.zshrc.private
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# configuration de spaceship avec failover
+if [ -f /opt/homebrew/opt/spaceship/spaceship.zsh ]
+then
+    source /opt/homebrew/opt/spaceship/spaceship.zsh
+else
+    ZSH_THEME="fade"
+    autoload -U promptinit; promptinit
+    prompt $ZSH_THEME
+fi
+
+[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 [ -f $(brew --prefix)/etc/profile.d/autojump.sh ] && . $(brew --prefix)/etc/profile.d/autojump.sh
 
@@ -117,7 +128,3 @@ export PATH="/usr/local/opt/node@14/bin:/usr/local/sbin:$PATH"
 export LESS=-iXFR
 export LESSOPEN='|~/.lessfilter %s'
 export JAVA_HOME=`/usr/libexec/java_home -v 11.0.9`
-
-  # Set Spaceship ZSH as a prompt
-  autoload -U promptinit; promptinit
-  prompt spaceship
